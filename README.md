@@ -262,3 +262,115 @@ npc start
   - 优化域名查找算法
 
 更多历史更新记录请参阅项目 [Releases](https://github.com/djylb/nps/releases)
+
+一、使用linux服务器进行搭建nps
+nps项目地址：https://github.com/ehang-io/nps/releases
+
+首先下载linux server端
+
+wget https://github.com/ehang-io/nps/releases/download/v0.26.10/linux_amd64_server.tar.gz
+
+如果服务器下载失败，则可以进入项目地址单独下载  linux_amd64_server.tar.gz
+
+使用  tar -zxvf linux_amd64_server.tar.gz  指令进行解压
+
+使用  ./nps install  进行安装nps
+
+完成之后编辑  /etc/nps/conf/nps.conf
+
+#web下面是web界面的相关设定
+
+web_username=用户名称
+
+web_password=用户密码
+
+web_port =web界面的端口号
+
+#HTTP(S) proxy port, no startup if empty
+
+http_proxy_port=80 端口号随意，不占用所需端口即可
+
+https_proxy_port=443  端口号随意，不占用所需端口即可
+
+##bridge下面是客户端连接服务端的设置，端口号可自定，其他可不动
+
+bridge_type=tcp
+
+bridge_port=8024
+
+bridge_ip=0.0.0.0
+
+为安全性（nps有这个漏洞）考虑的话，去掉
+
+#auth_key=test
+
+前面的#号并且将test改成乱码，比如
+
+auth_key=etsysudusa
+
+并将
+
+auth_crypt_key=1234567812345678
+
+也改为乱码，比如
+
+auth_crypt_key=rghusiohfnaibfbuegois
+
+然后输入  nps restart  进行重启nps
+
+服务器如果是端口映射则需要映射web端口和客户端连接端口
+
+使用公网地址进入web页面登录
+
+选择客户端，点击新增，可自由选择，也可啥也不动
+
+新增之后刷新，点击刚刚创建的客户端的加号
+
+里面的连接指令就是在客户端需要执行的
+
+二、使用linux连接nps
+首先下载linux client端
+
+wget https://github.com/ehang-io/nps/releases/download/v0.26.10/linux_amd64_client.tar.gz
+
+如果服务器下载失败，则可以进入项目地址单独下载  linux_amd64_client.tar.gz
+
+使用  tar -zxvf linux_amd64_client.tar.gz  指令进行解压
+
+然后直接输入连接指令即可连接（如果nps所在服务器是端口映射的，请将连接指令中的网址改为映射出去的外网地址）
+
+如果想让该映射自启动且不占用ssh，可在指令中添加  install  比如:
+
+./npc install -server=127.0.0.1:8024 -vkey=8eursdtstsqwrssts04x -type=tcp
+
+然后输入npc start进行启动，这时候npc服务可跟随系统自动启动以及后台运行。
+
+进入nps的web端的客户端页可看到是否连接成功
+
+若显示在线，点击隧道，然后进行端口映射
+
+点击新增，服务器端口就是映射出去后的端口，目标端口为需要映射的端口
+
+协议一般tcp即可
+
+三、使用windows服务器进行搭建nps
+首先下载windows server端
+
+https://github.com/ehang-io/nps/releases/download/v0.26.10/windows_386_server.tar.gz
+
+解压，配置文件在conf/nps.conf中，参考linux server搭建进行编辑
+
+运行nps.exe
+
+web操作同linux
+
+四、使用windows服务器进行连接nps
+首先下载windows client端
+
+https://github.com/ehang-io/nps/releases/download/v0.26.10/windows_amd64_client.tar.gz
+
+解压，在该目录打开cmd窗口，输入连接指令,删除./,比如
+
+npc -server=127.0.0.1:8024 -vkey=ysyststststs4x -type=tcp
+
+web操作同linux
